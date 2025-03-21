@@ -30,17 +30,32 @@ class MealDetailsScreen extends ConsumerWidget {
               ScaffoldMessenger.of(context)
                   .showSnackBar(SnackBar(content: Text(wasAdded ? 'Added to favourites' : 'Removed from favourites')));
             },
-            icon:Icon(isFavourite ? Icons.star: Icons.star_border),
+            icon:AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              transitionBuilder: (child, animation) {
+                return RotationTransition(
+                  turns: Tween<double>(begin: 0.8, end: 1).animate(animation),
+                  child: child,
+                );
+              },
+              child: Icon(
+                isFavourite ? Icons.star : Icons.star_border,
+                key: ValueKey(isFavourite),
+              ),
+            ),
           )
         ],
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Image.network(
-              meal.imageUrl,
-              height: 300,
-              fit: BoxFit.cover,
+            Hero(
+              tag: meal.id,
+              child: Image.network(
+                meal.imageUrl,
+                height: 300,
+                fit: BoxFit.cover,
+              ),
             ),
             SizedBox(height: 15),
             Text(
